@@ -544,7 +544,7 @@ mutantyearzero:
 dnd5eshaped:
 - "D&D_5e_Shaped"
 - "5th Edition (Shaped)"
-- "Dungeons and Dragons"
+- "hidden"
 
 allfleshmustbeeaten:
 - "Unisystem-All Flesh Must Be Eaten"
@@ -620,7 +620,8 @@ anneauunique:
 
 iconsassembled:
 - "Icons Assembled"
-- "Icons Assembled"
+- "ICONS Assembled"
+- "ICONS"
 
 beacon:
 - "Beacon"
@@ -1167,3 +1168,49 @@ nightshadeacademy:
 # - "Star Wars FFG API-Compatible"
 # - "Star Wars: Edge of the Empire (API-Compatible) new" # REMOVE THE NEW
 # - "Star Wars"
+
+bladesinthedark:
+- "Blades-in-the-Dark"
+- "Blades in the Dark"
+
+callofcthulu6efr:
+- "Call_of_Cthulhu_6th_Ed_French"
+- "Call of Cthulhu: 6th Edition (French)"
+- "Call of Cthulhu"
+
+theoneringde:
+- "Der Eine Ring"
+- "Der Eine Ring (German)"
+- "The One Ring"
+
+ccvf:
+- "Capes, Cowls & Villains Foul"
+- "Capes, Cowls & Villains Foul"
+
+thesprawl:
+- "The_Sprawl"
+- "The Sprawl"
+- "Apocalypse World Engine"
+
+dnd5eshaped2:
+- "D&D_5e_Reshaped"
+- "5th Edition (Shapedv2)"
+- "Dungeons and Dragons"
+
+nothankyouevil:
+- "No Thank You Evil"
+- "No Thank You, Evil"
+- "Cypher System"
+
+fraggedempire:
+- "Fragged-Empire"
+- "Fragged Empire"
+
+starmarxfr:
+- "Star Marx"
+- "STAR Marx (French)"
+
+iconsassembledfr:
+- "Icons French"
+- "ICONS Assembled (French)"
+- "ICONS"
