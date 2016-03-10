@@ -5667,6 +5667,51 @@
         });
 
     }
+    //Return: (string) normalized name for mod
+    var normalizeMod = function (value) = {
+        var nomes = {
+            dexterity: ['dex','dexterity','destreza'],
+            ac: ['ac','armor','armor class'],
+            savingthrow: ['saving throws','savings','saving throw','svt','saves','savingthrow','savingthrows'],
+            intel
+        }
+        for(var x in nomes) {
+            if(nomes[x].indexOf(v)!==-1) {value = x}
+        }
+        return value;
+    }
+    //Return: (object) [modname].value
+    var getItemMods = function() {
+        var itemmods={},ims="" m, r = /(\w+|\w+ \w+) ?(\+|-) ?(\d+)/g;
+        getSectionIDs("repeating_inventory", function(idarray) {
+            if(idarray.length > 0) {
+                _.each(idarray, function(currentID, i) {
+                    getAttrs(["repeating_inventory_" + currentID + "_itemtype","repeating_inventory_" + currentID + "_equipped"], function(v) {
+                        if(v["repeating_inventory_" + currentID + "_itemmodifiers"] && v["repeating_inventory_" + currentID + "_equipped"] === "1")) {
+                            ims+=v["repeating_inventory_" + currentID + "_itemmodifiers"].toLowerCase();
+                    }
+                }
+            }
+        }
+        while (m = r.exec(i)) {
+         var mod = normalizeMod(m[1]);
+          if(mod in itemmods) {
+          var f = ~~itemmods[mod].mod+~~(m[2]+m[3]);
+            itemmods[mod] = { mod:f };
+          } else { itemmods[mod] = { mod:~~(m[2]+m[3])}; }
+        }
+        return itemmods;
+    }
+
+    var applyItemMods = function() {
+        var mods = getItemMods();
+        //By using the mod|max to keep item modifications, we don't have to alter base status or formulas themselves, we set mod to mod=(mod)+mod|max
+        for (var mod in mods) {
+            getAttrs([mod]),function(v) {
+                setAttrs({[mod+'_max']: v.mod, mod: v.mod + v.[mod+'_max']});
+            }
+        }
+    }
 
     var updateac = function() {
         var itemtypes = [];
@@ -5724,10 +5769,6 @@
                     if(v["repeating_inventory_" + currentID + "_itemac"] && isNaN(parseInt(v["repeating_inventory_" + currentID + "_itemac"], 10)) === false && (!v["repeating_inventory_" + currentID + "_equipped"] || v["repeating_inventory_" + currentID + "_equipped"] === "1")) {
                         actotal = actotal + parseInt(v["repeating_inventory_" + currentID + "_itemac"], 10);
                     }
-                    if(v["repeating_inventory_" + currentID + "_itemmodifiers"] && v["repeating_inventory_" + currentID + "_itemmodifiers"].toLowerCase().indexOf("ac +") > -1 && (!v["repeating_inventory_" + currentID + "_equipped"] || v["repeating_inventory_" + currentID + "_equipped"] === "1")) {
-                        newac = v["repeating_inventory_" + currentID + "_itemmodifiers"].toLowerCase().split("ac")[1].match(/\d/);
-                        actotal = actotal + parseInt(newac[0], 10);
-                    }
                     if(i === idarray.length - 1) {
                         if(itemtypes.indexOf("light armor") > -1) {
                             actotal = actotal + dexmod;
@@ -5741,7 +5782,7 @@
                         else {
                             actotal = actotal + 10 + dexmod;
                         }
-                        actotal = actotal + globalacmod;
+                        actotal = actotal + globalacmod + getItemMods['ac'].mod;
                         setAttrs({ac: actotal});
                     }
                 });
@@ -5751,19 +5792,9 @@
 
     var updateglobalsave = function() {
         var savetotal = 0;
-        getSectionIDs("repeating_inventory", function(idarray) {
-            _.each(idarray, function(currentID, i) {
-                getAttrs(["repeating_inventory_" + currentID + "_itemmodifiers"], function(v) {
-                    if(v["repeating_inventory_" + currentID + "_itemmodifiers"] && v["repeating_inventory_" + currentID + "_itemmodifiers"].toLowerCase().indexOf("saving throws +") > -1) {
-                        newmod = v["repeating_inventory_" + currentID + "_itemmodifiers"].toLowerCase().split("saving throws")[1].match(/\d/);
-                        savetotal = savetotal + parseInt(newmod[0], 10);
-                    }
-                    if(i === idarray.length - 1) {
-                        setAttrs({globalsavemod: savetotal});
-                    }
-                });
-            })
-        });
+        if("saving throws" in getItemMods) {
+            setAttrs({globalsavemod: getItemMods['saving throws'].mod});
+        }
     }
 
     var additemattack = function(id) {
