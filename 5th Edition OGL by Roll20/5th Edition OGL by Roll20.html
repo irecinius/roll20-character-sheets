@@ -5782,7 +5782,7 @@
                         else {
                             actotal = actotal + 10 + dexmod;
                         }
-                        actotal = actotal + globalacmod + getItemMods['ac'].mod;
+                        actotal = actotal + globalacmod + + ("ac" in getItemMods?getItemMods['ac'].mod:0);
                         setAttrs({ac: actotal});
                     }
                 });
